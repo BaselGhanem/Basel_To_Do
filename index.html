@@ -7,42 +7,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. ARCHITECTURAL VARIABLES (Design Tokens) --- */
+        /* --- 1. ARCHITECTURAL VARIABLES --- */
         :root {
             --hue-primary: 250;
             --primary: hsl(var(--hue-primary), 90%, 65%);
             --primary-dark: hsl(var(--hue-primary), 80%, 55%);
             --primary-glow: hsla(var(--hue-primary), 90%, 65%, 0.4);
-            
             --hue-accent: 320;
             --accent: hsl(var(--hue-accent), 90%, 60%);
-            
             --success: #00dbb5;
             --danger: #ff4b4b;
             --warning: #fbbf24;
-
             --bg-deep: #030712;
             --bg-mesh-1: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%);
             --bg-mesh-2: radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%);
             --bg-mesh-3: radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            
             --glass-surface: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-highlight: rgba(255, 255, 255, 0.1);
-            
             --font-main: 'Inter', sans-serif;
             --font-ar: 'Tajawal', sans-serif;
             --font-code: 'JetBrains Mono', monospace;
-            
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-dim: #475569;
-
             --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
             --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
             --duration-fast: 0.2s;
             --duration-norm: 0.4s;
-            
             --shadow-card: 0 20px 40px -15px rgba(0,0,0,0.5);
             --shadow-glow: 0 0 20px var(--primary-glow);
         }
@@ -136,6 +128,7 @@
         header { 
             padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; 
             background: linear-gradient(to bottom, rgba(3,7,18,0.8), transparent);
+            flex-shrink: 0; z-index: 20;
         }
         .user-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .avatar { 
@@ -146,11 +139,12 @@
 
         .view-container { 
             flex: 1; padding: 0 2rem 2rem; overflow-y: auto; 
-            position: absolute; inset: 0; top: 80px;
-            opacity: 0; transform: translateY(20px) scale(0.98); pointer-events: none;
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative; /* Fixed: Relative to prevent header overlay */
+            display: none;
+            opacity: 0; transform: translateY(10px);
+            transition: all 0.4s var(--ease-smooth);
         }
-        .view-container.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+        .view-container.active { display: block; opacity: 1; transform: translateY(0); }
 
         .bento-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
@@ -162,6 +156,7 @@
             display: flex; justify-content: space-between; align-items: flex-end;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05));
             border: 1px solid var(--primary-glow); position: relative; overflow: hidden;
+            margin-bottom: 1rem;
         }
         .quote-box { max-width: 60%; font-style: italic; color: var(--text-muted); font-size: 0.95rem; }
         .quote-author { display: block; margin-top: 5px; font-weight: 600; font-style: normal; color: var(--primary); }
@@ -268,17 +263,18 @@
             .nav-item { margin-bottom: 0; width: 100%; height: 100%; border-radius: 0; background: transparent !important; box-shadow: none !important; }
             .nav-item.active { color: var(--primary); }
             main { order: 1; height: calc(100vh - 70px); padding-bottom: 0; }
-            .view-container { padding: 0 1rem 1rem; top: 70px; }
+            .view-container { padding: 0 1rem 80px; } /* Added padding for FAB on mobile */
             .fab { bottom: 90px; right: 20px; width: 56px; height: 56px; }
+            .stats-widget { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .stats-widget > div:last-child { text-align: left !important; }
+            .quote-box { max-width: 100%; }
         }
 
         .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .cal-nav-btn { background: var(--glass-surface); border: 1px solid var(--glass-border); color: var(--text-main); width: 40px; height: 40px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; }
         .cal-nav-btn:hover { background: var(--primary); color: white; box-shadow: var(--shadow-glow); }
-        
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
         .cal-day-name { text-align: center; font-weight: 700; color: var(--text-muted); font-size: 0.8rem; padding-bottom: 10px; text-transform: uppercase; }
-        
         .cal-cell { 
             min-height: 100px; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid transparent;
             padding: 10px; display: flex; flex-direction: column; gap: 5px; transition: 0.2s; cursor: pointer; position: relative;
@@ -286,9 +282,7 @@
         .cal-cell:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); border-color: var(--glass-highlight); }
         .cal-cell.today { background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.2); }
         .cal-cell.empty { background: transparent; pointer-events: none; }
-        
         .cal-date-num { font-weight: 700; font-size: 0.9rem; margin-bottom: 5px; opacity: 0.7; }
-        
         .task-dot { 
             font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; 
             background: rgba(255,255,255,0.1); border-left: 3px solid var(--primary);
@@ -314,34 +308,26 @@
     <div id="app-root" class="hidden">
         <aside class="glass-panel" style="border-radius:0;">
             <div class="brand-logo">T</div>
-            
             <div class="nav-item active" onclick="Router.nav('home')" data-tooltip="Overview">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             </div>
-            
             <div class="nav-item" onclick="Router.nav('calendar')" data-tooltip="Timeline">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
             </div>
-
             <div class="nav-item" onclick="DataSync.export()" data-tooltip="Export Backup">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             </div>
-
             <div class="nav-item" onclick="document.getElementById('import-file').click()" data-tooltip="Import Backup">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 <input type="file" id="import-file" style="display:none" onchange="DataSync.import(event)" accept=".json">
             </div>
-            
             <div style="flex:1;"></div>
-            
             <div class="nav-item" onclick="QuantumApp.resetData()" data-tooltip="Reset System" style="color:#ff4b4b;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
             </div>
-
             <div class="nav-item" onclick="QuantumApp.toggleTheme()" data-tooltip="Theme">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </div>
-            
             <div class="nav-item" onclick="QuantumApp.logout()" data-tooltip="Logout">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </div>
@@ -443,298 +429,132 @@
 
 <script>
     const CONFIG = { user: 'Basel', pass: '2505', dbKey: 'Basel_quantum_v1' };
-
     const DB = {
         get: () => JSON.parse(localStorage.getItem(CONFIG.dbKey)) || { tasks: [] },
         set: (data) => localStorage.setItem(CONFIG.dbKey, JSON.stringify(data)),
         init: () => { if(!localStorage.getItem(CONFIG.dbKey)) DB.set({ tasks: [] }); }
     };
-
     const DataSync = {
         export: () => {
             const data = localStorage.getItem(CONFIG.dbKey);
-            if (!data || JSON.parse(data).tasks.length === 0) {
-                return NotificationSys.show('No data to export, Commander.', 'error');
-            }
+            if (!data || JSON.parse(data).tasks.length === 0) return NotificationSys.show('No data.', 'error');
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `Basel_Quantum_Backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            NotificationSys.show('Data Exported Successfully', 'success');
+            a.href = url; a.download = `Basel_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            NotificationSys.show('Backup Exported', 'success');
         },
         import: (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+            const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.tasks && Array.isArray(importedData.tasks)) {
-                        if (confirm('Importing will overwrite current data. Proceed?')) {
-                            DB.set(importedData);
-                            NotificationSys.show('System Synchronized', 'success');
-                            setTimeout(() => location.reload(), 1000);
-                        }
-                    } else { throw new Error(); }
-                } catch { NotificationSys.show('Invalid Backup File', 'error'); }
+                    const data = JSON.parse(e.target.result);
+                    if (data.tasks) { if (confirm('Overwrite?')) { DB.set(data); location.reload(); } }
+                } catch { NotificationSys.show('Error', 'error'); }
             };
             reader.readAsText(file);
         }
     };
-
     const FX = {
         confetti: () => {
-            const canvas = document.getElementById('confetti');
-            const ctx = canvas.getContext('2d');
+            const canvas = document.getElementById('confetti'); const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            let particles = [];
-            for(let i=0; i<100; i++) particles.push({x: window.innerWidth/2, y: window.innerHeight/2, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10, color: `hsl(${Math.random()*360}, 100%, 50%)`, life: 100});
-            function draw() {
-                ctx.clearRect(0,0,canvas.width,canvas.height);
-                particles.forEach((p,i) => { p.x += p.vx; p.y += p.vy; p.life--; p.vy += 0.2; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 5, 5); if(p.life <= 0) particles.splice(i,1); });
-                if(particles.length > 0) requestAnimationFrame(draw);
-            }
+            let particles = []; for(let i=0; i<100; i++) particles.push({x: window.innerWidth/2, y: window.innerHeight/2, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10, color: `hsl(${Math.random()*360}, 100%, 50%)`, life: 100});
+            function draw() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach((p,i) => { p.x += p.vx; p.y += p.vy; p.life--; p.vy += 0.2; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 5, 5); if(p.life <= 0) particles.splice(i,1); }); if(particles.length > 0) requestAnimationFrame(draw); }
             draw();
         },
         trackMouse: (e) => {
             document.querySelectorAll('.spotlight-card').forEach(card => {
                 const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`); card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
             });
         }
     };
-
-    const NotificationSys = {
-        show: (msg, type='info') => {
-            const con = document.getElementById('toast-container');
-            const el = document.createElement('div');
-            el.className = 'toast';
-            el.innerHTML = `<span>${type==='success'?'✅': type==='error'?'⚠️':'ℹ️'}</span> ${msg}`;
-            con.appendChild(el);
-            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; setTimeout(() => el.remove(), 500); }, 3000);
-        }
-    };
-
+    const NotificationSys = { show: (msg, type='info') => { const con = document.getElementById('toast-container'); const el = document.createElement('div'); el.className = 'toast'; el.innerHTML = `<span>${type==='success'?'✅':'ℹ️'}</span> ${msg}`; con.appendChild(el); setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 500); }, 3000); } };
     const QuantumApp = {
         state: { folder: null, editingId: null },
         init: () => {
-            DB.init();
-            if(sessionStorage.getItem('Basel_session')) QuantumApp.unlockUI();
+            DB.init(); if(sessionStorage.getItem('Basel_session')) QuantumApp.unlockUI();
             document.addEventListener('mousemove', FX.trackMouse);
-            document.addEventListener('keydown', (e) => {
-                if(e.ctrlKey && e.key === 'k') { e.preventDefault(); document.getElementById('task-search')?.focus(); }
-                if(e.key === 'Escape') Modal.close();
-            });
             const hour = new Date().getHours();
             document.getElementById('greeting-txt').innerText = `${hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening'}, ${CONFIG.user}`;
             document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
             Tasks.updateGlobalStats();
         },
-        login: () => {
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            if((u === CONFIG.user && p === CONFIG.pass) || (u && p)) { sessionStorage.setItem('Basel_session', u); QuantumApp.unlockUI(); NotificationSys.show('Access Granted.', 'success'); } 
-            else { NotificationSys.show('Access Denied', 'error'); }
-        },
-        unlockUI: () => {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-root').classList.remove('hidden');
-            document.getElementById('main-fab').classList.remove('hidden');
-            Router.nav('home');
-        },
-        resetData: () => {
-            if(confirm('⚠️ Factory Reset? All data will be lost.')) { localStorage.removeItem(CONFIG.dbKey); location.reload(); }
-        },
-        logout: () => { sessionStorage.removeItem('Basel_session'); location.reload(); },
-        toggleTheme: () => { const current = document.body.getAttribute('data-theme'); document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light'); }
+        login: () => { if(document.getElementById('password').value === CONFIG.pass) { sessionStorage.setItem('Basel_session', 'Basel'); QuantumApp.unlockUI(); } else NotificationSys.show('Error', 'error'); },
+        unlockUI: () => { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-root').classList.remove('hidden'); document.getElementById('main-fab').classList.remove('hidden'); Router.nav('home'); },
+        resetData: () => { if(confirm('Reset?')) { localStorage.clear(); location.reload(); } },
+        logout: () => { sessionStorage.clear(); location.reload(); },
+        toggleTheme: () => { const cur = document.body.getAttribute('data-theme'); document.body.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light'); }
     };
-
     const Router = {
         nav: (view) => {
             document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const items = document.querySelectorAll('.nav-item');
-            if(view === 'home') {
-                QuantumApp.state.folder = null; 
-                document.getElementById('view-home').classList.add('active');
-                items[0].classList.add('active');
-                Tasks.renderFolders();
-                Tasks.updateGlobalStats();
-            } else if(view === 'calendar') {
-                document.getElementById('view-calendar').classList.add('active');
-                items[1].classList.add('active');
-                Calendar.render();
-            }
+            if(view === 'home') { QuantumApp.state.folder = null; document.getElementById('view-home').classList.add('active'); items[0].classList.add('active'); Tasks.renderFolders(); Tasks.updateGlobalStats(); }
+            else if(view === 'calendar') { document.getElementById('view-calendar').classList.add('active'); items[1].classList.add('active'); Calendar.render(); }
         },
-        openFolder: (folderName) => {
-            QuantumApp.state.folder = folderName;
-            document.getElementById('view-home').classList.remove('active');
-            document.getElementById('view-tasks').classList.add('active');
-            document.getElementById('folder-title').innerText = folderName;
-            Tasks.renderList();
-        }
+        openFolder: (f) => { QuantumApp.state.folder = f; document.getElementById('view-home').classList.remove('active'); document.getElementById('view-tasks').classList.add('active'); document.getElementById('folder-title').innerText = f; Tasks.renderList(); }
     };
-
     const Tasks = {
         folders: ['X Academy', 'Personal', 'Work', 'Development'],
-        getFormattedDate: (dateStr) => {
-            if(!dateStr) return '';
-            const diff = Math.ceil((new Date(dateStr) - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)); 
-            return diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : dateStr;
-        },
-        updateGlobalStats: () => {
-            const all = DB.get().tasks;
-            const total = all.length;
-            const completed = all.filter(t => t.completed).length;
-            const el = document.getElementById('total-percent');
-            if(el) el.innerText = `${total === 0 ? 0 : Math.round((completed / total) * 100)}%`;
-        },
+        updateGlobalStats: () => { const all = DB.get().tasks; const total = all.length; const comp = all.filter(t => t.completed).length; document.getElementById('total-percent').innerText = `${total === 0 ? 0 : Math.round((comp / total) * 100)}%`; },
         renderFolders: () => {
-            const mount = document.getElementById('folders-mount');
-            mount.innerHTML = '';
-            const data = DB.get().tasks;
-            Tasks.folders.forEach((f, index) => {
-                const tList = data.filter(t => t.folder === f);
-                const total = tList.length;
-                const percent = total === 0 ? 0 : Math.round((tList.filter(t => t.completed).length/total)*100);
-                const card = document.createElement('div');
-                card.className = 'folder-card glass-panel spotlight-card interactive';
-                card.style.animation = `slideUp 0.5s var(--ease-elastic) ${index * 0.1}s backwards`;
-                const hue = 200 + (index * 40);
-                const gradient = `linear-gradient(135deg, hsl(${hue}, 80%, 60%), hsl(${hue+30}, 80%, 60%))`;
-                card.innerHTML = `
-                    <div class="folder-info"><div style="width:40px; height:40px; border-radius:10px; background:${gradient}; display:flex; align-items:center; justify-content:center; margin-bottom:1rem;"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></div><h3>${f}</h3><span>${total} Missions</span></div>
-                    <div><div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;"><span>Progress</span><span>${percent}%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${percent}%; background:${gradient}"></div></div></div>
-                `;
-                card.onclick = () => Router.openFolder(f);
-                mount.appendChild(card);
+            const mount = document.getElementById('folders-mount'); mount.innerHTML = ''; const data = DB.get().tasks;
+            Tasks.folders.forEach((f, i) => {
+                const tList = data.filter(t => t.folder === f); const comp = tList.filter(t => t.completed).length; const per = tList.length === 0 ? 0 : Math.round((comp/tList.length)*100);
+                const hue = 200 + (i * 40); const grad = `linear-gradient(135deg, hsl(${hue}, 80%, 60%), hsl(${hue+30}, 80%, 60%))`;
+                const card = document.createElement('div'); card.className = 'folder-card glass-panel spotlight-card interactive';
+                card.innerHTML = `<div class="folder-info"><div style="width:40px; height:40px; border-radius:10px; background:${grad}; display:flex; align-items:center; justify-content:center; margin-bottom:1rem;"><svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></div><h3>${f}</h3><span>${tList.length} Missions</span></div><div><div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;"><span>Progress</span><span>${per}%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${per}%; background:${grad}"></div></div></div>`;
+                card.onclick = () => Router.openFolder(f); mount.appendChild(card);
             });
         },
-        renderList: (filterText = '') => {
-            const f = QuantumApp.state.folder;
-            const listToday = document.getElementById('list-today');
-            const listLong = document.getElementById('list-longterm');
-            listToday.innerHTML = ''; listLong.innerHTML = '';
-            const data = DB.get().tasks.filter(t => t.folder === f);
-            if(data.length === 0) { listToday.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--text-muted); opacity:0.5;">Empty Sector.</div>`; return; }
-            data.forEach((t, i) => {
-                if(filterText && !t.title.toLowerCase().includes(filterText.toLowerCase())) return;
-                const el = document.createElement('div');
-                el.className = `task-item ${t.completed ? 'completed' : ''} interactive`;
-                el.style.animationDelay = `${i * 0.05}s`;
+        renderList: (search = '') => {
+            const f = QuantumApp.state.folder; const listT = document.getElementById('list-today'); const listL = document.getElementById('list-longterm');
+            listT.innerHTML = ''; listL.innerHTML = ''; const data = DB.get().tasks.filter(t => t.folder === f);
+            data.forEach(t => {
+                if(search && !t.title.toLowerCase().includes(search.toLowerCase())) return;
+                const el = document.createElement('div'); el.className = `task-item ${t.completed ? 'completed' : ''} interactive`;
                 el.onclick = () => Modal.edit(t.id);
-                el.innerHTML = `
-                    <div class="checkbox" onclick="event.stopPropagation(); Tasks.toggle(${t.id})">${t.completed ? '✓' : ''}</div>
-                    <div style="flex:1;">
-                        <h4 style="font-weight:500;">${t.title}</h4>
-                        <div style="display:flex; gap:10px; margin-top:5px;">
-                            ${t.urgent ? `<span class="tag urgent">PRIORITY</span>` : ''}
-                            <span class="tag">${Tasks.getFormattedDate(t.dueDate)}</span>
-                            <span class="tag" style="opacity:0.7;">${t.time || ''}</span>
-                        </div>
-                    </div>
-                    <button onclick="event.stopPropagation(); Tasks.delete(${t.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">×</button>
-                `;
-                if(t.type === 'today') listToday.appendChild(el); else listLong.appendChild(el);
+                el.innerHTML = `<div class="checkbox" onclick="event.stopPropagation(); Tasks.toggle(${t.id})">${t.completed ? '✓' : ''}</div><div style="flex:1;"><h4 style="font-weight:500;">${t.title}</h4><div style="display:flex; gap:10px; margin-top:5px;">${t.urgent ? '<span class="tag urgent">PRIORITY</span>' : ''}<span class="tag">${t.dueDate}</span></div></div><button onclick="event.stopPropagation(); Tasks.delete(${t.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">×</button>`;
+                t.type === 'today' ? listT.appendChild(el) : listL.appendChild(el);
             });
         },
         save: () => {
-            const title = document.getElementById('inp-title').value;
-            const dueDate = document.getElementById('inp-date').value;
-            if(!title || !dueDate) return NotificationSys.show('Validation Error', 'error');
-            const taskData = {
-                title, dueDate,
-                folder: document.getElementById('inp-folder').value,
-                type: document.getElementById('inp-type').value,
-                time: document.getElementById('inp-time').value,
-                urgent: document.getElementById('inp-urgent').checked
-            };
-            let db = DB.get();
-            if (QuantumApp.state.editingId) {
-                const idx = db.tasks.findIndex(t => t.id === QuantumApp.state.editingId);
-                if (idx !== -1) db.tasks[idx] = { ...db.tasks[idx], ...taskData };
-            } else {
-                db.tasks.push({ id: Date.now(), completed: false, ...taskData });
-            }
-            db.tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-            DB.set(db);
-            Tasks.updateGlobalStats();
-            Modal.close();
-            QuantumApp.state.folder ? Tasks.renderList() : Tasks.renderFolders();
+            const title = document.getElementById('inp-title').value; const date = document.getElementById('inp-date').value; if(!title || !date) return;
+            const taskData = { title, dueDate: date, folder: document.getElementById('inp-folder').value, type: document.getElementById('inp-type').value, time: document.getElementById('inp-time').value, urgent: document.getElementById('inp-urgent').checked };
+            let db = DB.get(); if (QuantumApp.state.editingId) { const idx = db.tasks.findIndex(t => t.id === QuantumApp.state.editingId); db.tasks[idx] = { ...db.tasks[idx], ...taskData }; } else db.tasks.push({ id: Date.now(), completed: false, ...taskData });
+            DB.set(db); Tasks.updateGlobalStats(); Modal.close(); QuantumApp.state.folder ? Tasks.renderList() : Tasks.renderFolders();
         },
-        toggle: (id) => {
-            const db = DB.get(); const t = db.tasks.find(x => x.id === id);
-            if(t) { t.completed = !t.completed; DB.set(db); Tasks.renderList(); Tasks.updateGlobalStats(); if(t.completed) FX.confetti(); }
-        },
-        delete: (id) => {
-            if(!confirm('Purge mission?')) return;
-            let db = DB.get(); db.tasks = db.tasks.filter(x => x.id !== id); DB.set(db);
-            Tasks.renderList(); Tasks.updateGlobalStats(); Modal.close();
-        },
+        toggle: (id) => { const db = DB.get(); const t = db.tasks.find(x => x.id === id); if(t) { t.completed = !t.completed; DB.set(db); Tasks.renderList(); Tasks.updateGlobalStats(); if(t.completed) FX.confetti(); } },
+        delete: (id) => { if(confirm('Delete?')) { let db = DB.get(); db.tasks = db.tasks.filter(x => x.id !== id); DB.set(db); Tasks.renderList(); Tasks.updateGlobalStats(); } },
         search: (val) => Tasks.renderList(val)
     };
-
     const Calendar = {
         date: new Date(),
-        nav: (delta) => {
-            delta === 0 ? Calendar.date = new Date() : Calendar.date.setMonth(Calendar.date.getMonth() + delta);
-            Calendar.render();
-        },
+        nav: (d) => { d === 0 ? Calendar.date = new Date() : Calendar.date.setMonth(Calendar.date.getMonth() + d); Calendar.render(); },
         render: () => {
-            const grid = document.getElementById('cal-grid-mount'); if(!grid) return;
-            grid.innerHTML = '';
-            const y = Calendar.date.getFullYear(), m = Calendar.date.getMonth();
-            const todayStr = new Date().toISOString().split('T')[0];
+            const grid = document.getElementById('cal-grid-mount'); if(!grid) return; grid.innerHTML = ''; const y = Calendar.date.getFullYear(), m = Calendar.date.getMonth();
             const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
             document.getElementById('cal-title').innerText = `${monthNames[m]} ${y}`;
             ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => grid.innerHTML += `<div class="cal-day-name">${d}</div>`);
-            const firstDay = new Date(y, m, 1).getDay(), daysInMonth = new Date(y, m + 1, 0).getDate();
-            const dbTasks = DB.get().tasks;
-            for(let i=0; i<firstDay; i++) grid.innerHTML += `<div class="cal-cell empty"></div>`;
-            for(let d=1; d<=daysInMonth; d++) {
-                const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const isToday = dateStr === todayStr;
-                const dayTasks = dbTasks.filter(t => t.dueDate === dateStr);
-                let taskHTML = '';
-                dayTasks.forEach(t => taskHTML += `<div class="task-dot ${t.completed?'done':t.urgent?'urgent':''}">${t.title}</div>`);
-                grid.innerHTML += `<div class="cal-cell ${isToday?'today':''}" onclick="NotificationSys.show('${dayTasks.length} missions')"><div class="cal-date-num">${d}</div>${taskHTML}</div>`;
+            const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate(); const tasks = DB.get().tasks;
+            for(let i=0; i<first; i++) grid.innerHTML += '<div class="cal-cell empty"></div>';
+            for(let d=1; d<=days; d++) {
+                const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const dt = tasks.filter(t => t.dueDate === ds);
+                let html = ''; dt.forEach(t => html += `<div class="task-dot ${t.completed?'done':t.urgent?'urgent':''}">${t.title}</div>`);
+                grid.innerHTML += `<div class="cal-cell ${ds===new Date().toISOString().split('T')[0]?'today':''}"><div class="cal-date-num">${d}</div>${html}</div>`;
             }
         }
     };
-
     const Modal = {
-        open: () => {
-            QuantumApp.state.editingId = null;
-            Modal.renderCommon();
-            document.querySelector('.modal-window h2').innerText = 'New Objective';
-            document.getElementById('inp-title').value = '';
-            document.getElementById('inp-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modal-overlay').classList.add('open');
-        },
-        edit: (id) => {
-            const task = DB.get().tasks.find(t => t.id === id); if(!task) return;
-            QuantumApp.state.editingId = id;
-            Modal.renderCommon();
-            document.querySelector('.modal-window h2').innerText = 'Edit Objective';
-            document.getElementById('inp-title').value = task.title;
-            document.getElementById('inp-folder').value = task.folder;
-            document.getElementById('inp-date').value = task.dueDate;
-            document.getElementById('inp-time').value = task.time;
-            document.getElementById('inp-urgent').checked = task.urgent;
-            document.getElementById('modal-overlay').classList.add('open');
-        },
+        open: () => { QuantumApp.state.editingId = null; Modal.renderCommon(); document.querySelector('.modal-window h2').innerText = 'New Objective'; document.getElementById('inp-title').value = ''; document.getElementById('inp-date').value = new Date().toISOString().split('T')[0]; document.getElementById('modal-overlay').classList.add('open'); },
+        edit: (id) => { const t = DB.get().tasks.find(x => x.id === id); QuantumApp.state.editingId = id; Modal.renderCommon(); document.querySelector('.modal-window h2').innerText = 'Edit Objective'; document.getElementById('inp-title').value = t.title; document.getElementById('inp-folder').value = t.folder; document.getElementById('inp-date').value = t.dueDate; document.getElementById('inp-urgent').checked = t.urgent; document.getElementById('modal-overlay').classList.add('open'); },
         close: () => document.getElementById('modal-overlay').classList.remove('open'),
-        renderCommon: () => {
-            const sel = document.getElementById('inp-folder'); sel.innerHTML = '';
-            Tasks.folders.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`);
-            if(QuantumApp.state.folder) sel.value = QuantumApp.state.folder;
-        }
+        renderCommon: () => { const sel = document.getElementById('inp-folder'); sel.innerHTML = ''; Tasks.folders.forEach(f => sel.innerHTML += `<option value="${f}">${f}</option>`); if(QuantumApp.state.folder) sel.value = QuantumApp.state.folder; }
     };
 </script>
 </body>
