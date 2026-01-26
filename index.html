@@ -328,6 +328,48 @@
         
     </style>
 </head>
+const DataSync = {
+    export: () => {
+        const data = localStorage.getItem(CONFIG.dbKey);
+        if (!data || JSON.parse(data).tasks.length === 0) {
+            return NotificationSys.show('No data to export, Commander.', 'error');
+        }
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Basel_Quantum_Backup_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        NotificationSys.show('System Data Exported', 'success');
+    },
+
+    import: (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                if (importedData.tasks && Array.isArray(importedData.tasks)) {
+                    if (confirm('Importing will overwrite current data. Proceed?')) {
+                        DB.set(importedData);
+                        NotificationSys.show('Data Synced Successfully', 'success');
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                } else {
+                    throw new Error('Invalid Data Structure');
+                }
+            } catch (err) {
+                NotificationSys.show('Failed to import: Invalid file', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+};
 <body onload="QuantumApp.init()">
 
     <div id="login-screen" style="position:fixed; inset:0; z-index:9999; background:var(--bg-deep); display:flex; flex-direction:column; justify-content:center; align-items:center;">
@@ -353,7 +395,14 @@
             </div>
             
             <div style="flex:1;"></div>
-            
+                <div class="nav-item" onclick="DataSync.export()" data-tooltip="Export Data">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    </div>
+    
+    <div class="nav-item" onclick="document.getElementById('import-file').click()" data-tooltip="Import Data">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        <input type="file" id="import-file" style="display:none" onchange="DataSync.import(event)" accept=".json">
+    </div>
             <div class="nav-item" onclick="QuantumApp.resetData()" data-tooltip="Reset System" style="color:#ff4b4b;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
             </div>
