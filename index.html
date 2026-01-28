@@ -656,11 +656,19 @@
             document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
             Tasks.updateGlobalStats();
         },
-        login: () => {
+       login: () => {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            if((u === CONFIG.user && p === CONFIG.pass) || (u && p)) { sessionStorage.setItem('Basel_session', u); QuantumApp.unlockUI(); NotificationSys.show('Access Granted.', 'success'); } 
-            else { NotificationSys.show('Access Denied', 'error'); }
+            
+            // تأكد أن الشرط فقط هكذا (بدون علامات الـ || الزائدة)
+            if(u === CONFIG.user && p === CONFIG.pass) { 
+                sessionStorage.setItem('Basel_session', u); 
+                QuantumApp.unlockUI(); 
+                NotificationSys.show('Access Granted.', 'success'); 
+            } 
+            else { 
+                NotificationSys.show('Access Denied', 'error'); 
+            }
         },
         unlockUI: () => {
             document.getElementById('login-screen').classList.add('hidden');
