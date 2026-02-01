@@ -646,7 +646,7 @@
     };
 
     const QuantumApp = {
-        state: { folder: null, editingId: null, showCompleted: true }, // Added showCompleted
+        state: { folder: null, editingId: null, showCompleted: true, showCompletedMyDay: true }, 
         init: () => {
             DB.init();
             if(sessionStorage.getItem('Basel_session')) QuantumApp.unlockUI();
@@ -695,7 +695,7 @@
                 btn.innerHTML = '<path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>'; 
             }
         },
-        // NEW FUNCTION: Toggle Show Completed
+        // Main view toggle
         toggleShowCompleted: (isChecked) => {
             QuantumApp.state.showCompleted = isChecked;
             Tasks.renderList(document.getElementById('task-search').value);
@@ -770,14 +770,13 @@
             const listLong = document.getElementById('list-longterm');
             listToday.innerHTML = ''; listLong.innerHTML = '';
             
-            const showDone = QuantumApp.state.showCompleted; // Get current toggle state
+            const showDone = QuantumApp.state.showCompleted; 
 
             const data = DB.get().tasks.filter(t => t.folder === f);
             if(data.length === 0) { listToday.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--text-muted); opacity:0.5;">Empty Sector.</div>`; return; }
             data.forEach((t, i) => {
                 if(filterText && !t.title.toLowerCase().includes(filterText.toLowerCase())) return;
                 
-                // NEW: Skip completed tasks if showDone is false
                 if (!showDone && t.completed) return;
 
                 const el = document.createElement('div');
@@ -828,7 +827,7 @@
             if(t) { 
                 t.completed = !t.completed; 
                 DB.set(db); 
-                Tasks.renderList(document.getElementById('task-search').value); // Re-render with current filter
+                Tasks.renderList(document.getElementById('task-search').value); 
                 Tasks.updateGlobalStats(); 
                 if(t.completed) FX.confetti(); 
             }
@@ -951,10 +950,16 @@
             const myDayView = document.createElement('div');
             myDayView.id = 'view-myday';
             myDayView.className = 'view-container';
+            // UPDATED HTML FOR TOGGLE
             myDayView.innerHTML = `
                 <div class="task-view-header">
                     <h1 style="font-weight:800; font-size:2rem; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">My Day</h1>
-                    <div style="margin-left:auto; color:var(--text-muted);">Master Basel's Agenda</div>
+                    <div style="margin-left:auto; display:flex; gap:15px; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" id="toggle-completed-myday" checked onchange="MyDayController.toggleShowCompleted(this.checked)" style="width:16px; height:16px; margin:0;">
+                            <label for="toggle-completed-myday" style="color:var(--text-muted); font-size:0.85rem; cursor:pointer;">Show Done</label>
+                        </div>
+                    </div>
                 </div>
                 <div id="myday-list-mount" style="padding-bottom:100px;"></div>
             `;
@@ -1034,15 +1039,28 @@
     };
 
     const MyDayController = {
+        toggleShowCompleted: (val) => {
+            QuantumApp.state.showCompletedMyDay = val;
+            MyDayController.render();
+        },
         render: () => {
             const mount = document.getElementById('myday-list-mount');
             mount.innerHTML = '';
-            let tasks = DB.get().tasks;
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            let tasks = DB.get().tasks.filter(t => t.dueDate === todayStr); // FILTER: ONLY TODAY
+            
+            // FILTER: Show/Hide Completed
+            if (!QuantumApp.state.showCompletedMyDay) {
+                tasks = tasks.filter(t => !t.completed);
+            }
+
             tasks.sort((a, b) => {
                 const dateA = new Date(a.dueDate + (a.time ? 'T' + a.time : 'T00:00'));
                 const dateB = new Date(b.dueDate + (b.time ? 'T' + b.time : 'T00:00'));
                 return dateA - dateB;
             });
+
             if (tasks.length === 0) {
                 mount.innerHTML = `<div style="text-align:center; padding:4rem; color:var(--text-muted); opacity:0.6;">You are completely free, Sir.</div>`;
                 return;
