@@ -368,7 +368,7 @@
             <h1 class="brand-logo" style="margin-bottom:0.5rem; font-size:2.5rem; display:block;">Basel</h1>
             <p style="color:var(--text-muted); margin-bottom:2rem;">Quantum Edition</p>
             <input type="text" id="username" placeholder="Identity" value="Basel" style="text-align:center;">
-            <input type="password" id="password" placeholder="Passcode" style="text-align:center;">
+            <input type="password" id="password" placeholder="Passcode" style="text-align:center;" oninput="if(this.value === CONFIG.pass) QuantumApp.login()">
             <button class="btn-main" onclick="QuantumApp.login()">AUTHENTICATE</button>
         </div>
     </div>
@@ -461,7 +461,11 @@
                 <div class="task-view-header">
                     <button class="interactive" onclick="Router.nav('home')" style="background:none; border:none; color:var(--text-main); font-size:1.5rem; cursor:pointer;">←</button>
                     <h1 id="folder-title" style="font-weight:800; font-size:2rem;">Folder Name</h1>
-                    <div style="margin-left:auto;">
+                    <div style="margin-left:auto; display:flex; gap:15px; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <input type="checkbox" id="toggle-completed" checked onchange="QuantumApp.toggleShowCompleted(this.checked)" style="width:16px; height:16px; margin:0;">
+                            <label for="toggle-completed" style="color:var(--text-muted); font-size:0.85rem; cursor:pointer;">Show Done</label>
+                        </div>
                         <input type="text" id="task-search" placeholder="Search missions..." style="width:200px; padding:0.5rem 1rem; margin:0; font-size:0.9rem;" onkeyup="Tasks.search(this.value)">
                     </div>
                 </div>
@@ -642,7 +646,7 @@
     };
 
     const QuantumApp = {
-        state: { folder: null, editingId: null },
+        state: { folder: null, editingId: null, showCompleted: true }, // Added showCompleted
         init: () => {
             DB.init();
             if(sessionStorage.getItem('Basel_session')) QuantumApp.unlockUI();
@@ -660,7 +664,6 @@
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             
-            // تأكد أن الشرط فقط هكذا (بدون علامات الـ || الزائدة)
             if(u === CONFIG.user && p === CONFIG.pass) { 
                 sessionStorage.setItem('Basel_session', u); 
                 QuantumApp.unlockUI(); 
@@ -682,7 +685,6 @@
         logout: () => { sessionStorage.removeItem('Basel_session'); location.reload(); },
         toggleTheme: () => { const current = document.body.getAttribute('data-theme'); document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light'); },
         
-        // --- ADDED: Sidebar Toggle Logic ---
         toggleSidebar: () => {
             const app = document.getElementById('app-root');
             const btn = document.querySelector('.toggle-btn svg');
@@ -692,6 +694,11 @@
             } else {
                 btn.innerHTML = '<path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>'; 
             }
+        },
+        // NEW FUNCTION: Toggle Show Completed
+        toggleShowCompleted: (isChecked) => {
+            QuantumApp.state.showCompleted = isChecked;
+            Tasks.renderList(document.getElementById('task-search').value);
         }
     };
 
@@ -701,11 +708,9 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const items = document.querySelectorAll('.nav-item');
             
-            // Basic routing (Overridden by QuantumExtensions for 'myday')
             if(view === 'home') {
                 QuantumApp.state.folder = null; 
                 document.getElementById('view-home').classList.add('active');
-                // Index 0 in nav list (Overview)
                 items[0].classList.add('active');
                 Tasks.renderFolders();
                 Tasks.updateGlobalStats();
@@ -764,10 +769,17 @@
             const listToday = document.getElementById('list-today');
             const listLong = document.getElementById('list-longterm');
             listToday.innerHTML = ''; listLong.innerHTML = '';
+            
+            const showDone = QuantumApp.state.showCompleted; // Get current toggle state
+
             const data = DB.get().tasks.filter(t => t.folder === f);
             if(data.length === 0) { listToday.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--text-muted); opacity:0.5;">Empty Sector.</div>`; return; }
             data.forEach((t, i) => {
                 if(filterText && !t.title.toLowerCase().includes(filterText.toLowerCase())) return;
+                
+                // NEW: Skip completed tasks if showDone is false
+                if (!showDone && t.completed) return;
+
                 const el = document.createElement('div');
                 el.className = `task-item ${t.completed ? 'completed' : ''} interactive`;
                 el.style.animationDelay = `${i * 0.05}s`;
@@ -813,7 +825,13 @@
         },
         toggle: (id) => {
             const db = DB.get(); const t = db.tasks.find(x => x.id === id);
-            if(t) { t.completed = !t.completed; DB.set(db); Tasks.renderList(); Tasks.updateGlobalStats(); if(t.completed) FX.confetti(); }
+            if(t) { 
+                t.completed = !t.completed; 
+                DB.set(db); 
+                Tasks.renderList(document.getElementById('task-search').value); // Re-render with current filter
+                Tasks.updateGlobalStats(); 
+                if(t.completed) FX.confetti(); 
+            }
         },
         delete: (id) => {
             if(!confirm('Purge mission?')) return;
@@ -901,7 +919,6 @@
             `;
             
             // Insert at index 3 (After Calendar)
-            // Current Children: 0:LogoDiv, 1:Home, 2:Calendar, 3:Sync...
             navContainer.insertBefore(myDayBtn, navContainer.children[3]);
 
             // Inject Excel Controls with text spans
@@ -925,8 +942,6 @@
                 <span class="nav-text">Import</span>
             `;
 
-            // Insert before JSON Backup (which is usually around index 5 or 6 now)
-            // Easier approach: Insert before the element that has onclick="DataSync.export()"
             const jsonBackupBtn = document.querySelector('div[onclick="DataSync.export()"]');
             navContainer.insertBefore(excelExportBtn, jsonBackupBtn);
             navContainer.insertBefore(excelImportBtn, jsonBackupBtn);
