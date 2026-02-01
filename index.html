@@ -731,11 +731,12 @@
 
     const Tasks = {
         folders: ['X Academy', 'Personal', 'Work', 'Development'],
-        getFormattedDate: (dateStr) => {
-            if(!dateStr) return '';
-            const diff = Math.ceil((new Date(dateStr) - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)); 
-            return diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : dateStr;
-        },
+         getFormattedDate: (dateStr) => {
+                if(!dateStr) return '';
+                // التعديل: إضافة T00:00:00 لإجبار المتصفح على التعامل مع التاريخ بالتوقيت المحلي بدلاً من الدولي
+                const diff = Math.ceil((new Date(dateStr + 'T00:00:00') - new Date().setHours(0,0,0,0)) / (1000 * 60 * 60 * 24));
+                return diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : dateStr;
+            },
         updateGlobalStats: () => {
             const all = DB.get().tasks;
             const total = all.length;
