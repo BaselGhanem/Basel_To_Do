@@ -20,7 +20,6 @@
             --success: #00dbb5;
             --danger: #ff4b4b;
             --warning: #fbbf24;
-
             --bg-deep: #030712;
             --bg-mesh-1: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%);
             --bg-mesh-2: radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%);
@@ -37,7 +36,6 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --text-dim: #475569;
-
             --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
             --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
             --duration-fast: 0.2s;
@@ -45,11 +43,9 @@
             
             --shadow-card: 0 20px 40px -15px rgba(0,0,0,0.5);
             --shadow-glow: 0 0 20px var(--primary-glow);
-
             /* Sidebar Variables */
             --sidebar-width: 80px;
         }
-
         [data-theme="light"] {
             --bg-deep: #f8fafc;
             --glass-surface: rgba(255, 255, 255, 0.6);
@@ -61,7 +57,6 @@
             --bg-mesh-2: transparent;
             --bg-mesh-3: transparent;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: var(--font-main);
@@ -77,7 +72,6 @@
         [dir="rtl"] body { font-family: var(--font-ar); }
         
         @keyframes meshFlow { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
-
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { 
@@ -87,7 +81,6 @@
             background-clip: content-box;
         }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
         .hidden { display: none !important; opacity: 0; pointer-events: none; }
         .glass-panel {
             background: var(--glass-surface);
@@ -98,7 +91,6 @@
         }
         .interactive { cursor: pointer; transition: transform var(--duration-fast) var(--ease-smooth), box-shadow var(--duration-fast); }
         .interactive:active { transform: scale(0.96); }
-
         .spotlight-card { position: relative; overflow: hidden; }
         .spotlight-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -106,7 +98,6 @@
             z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.5s;
         }
         .spotlight-card:hover::before { opacity: 1; }
-
         #app-root {
             display: grid; grid-template-columns: var(--sidebar-width) 1fr; height: 100vh;
             max-width: 1920px; margin: 0 auto;
@@ -147,7 +138,6 @@
             margin-bottom: 2rem; transition: 0.3s; color: var(--text-muted);
         }
         .toggle-btn:hover { background: var(--primary); color: white; }
-
         /* Tooltips only on desktop when collapsed */
         @media (min-width: 769px) {
             #app-root:not(.expanded) .nav-item[data-tooltip]:hover::after {
@@ -157,7 +147,6 @@
                 animation: fadeIn 0.2s forwards; z-index: 100;
             }
         }
-
         main { position: relative; overflow: hidden; height: 100%; display: flex; flex-direction: column; }
         header { 
             padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; 
@@ -169,7 +158,6 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: 700; color: #333; font-size: 0.9rem; border: 2px solid rgba(255,255,255,0.2);
         }
-
         .view-container { 
             flex: 1; padding: 0 2rem 2rem; overflow-y: auto; 
             position: absolute; inset: 0; top: 80px;
@@ -177,7 +165,6 @@
             transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .view-container.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
-
         .bento-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
             padding-bottom: 100px;
@@ -191,7 +178,6 @@
         }
         .quote-box { max-width: 60%; font-style: italic; color: var(--text-muted); font-size: 0.95rem; }
         .quote-author { display: block; margin-top: 5px; font-weight: 600; font-style: normal; color: var(--primary); }
-
         .folder-card {
             height: 180px; border-radius: 24px; padding: 1.5rem;
             display: flex; flex-direction: column; justify-content: space-between;
@@ -203,7 +189,6 @@
         
         .progress-bar-bg { width: 100%; height: 6px; background: rgba(0,0,0,0.2); border-radius: 10px; margin-top: 15px; overflow: hidden; }
         .progress-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease 0.5s; width: 0; }
-
         .task-view-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
         .task-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; padding-bottom: 4rem; }
         .task-col-header { 
@@ -229,7 +214,6 @@
         
         .tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.05); }
         .tag.urgent { color: var(--danger); background: rgba(255, 75, 75, 0.1); border: 1px solid rgba(255, 75, 75, 0.2); }
-
         .modal-backdrop {
             position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
             z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
@@ -249,7 +233,6 @@
             transition: 0.3s; font-family: var(--font-main);
         }
         input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: rgba(0,0,0,0.4); }
-
         .btn-main {
             width: 100%; padding: 1rem; border-radius: 14px; border: none; font-weight: 700;
             background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;
@@ -260,7 +243,6 @@
             transform: translateX(-100%); transition: 0.3s;
         }
         .btn-main:hover::after { transform: translateX(0); }
-
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; width: 90%; align-items: center; }
         .toast {
             padding: 12px 24px; border-radius: 50px; background: rgba(15, 23, 42, 0.95);
@@ -269,7 +251,6 @@
             animation: slideUpFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); white-space: nowrap;
         }
-
         .fab {
             position: fixed; bottom: 40px; right: 40px; width: 64px; height: 64px;
             background: var(--text-main); color: var(--bg-deep); border-radius: 50%;
@@ -278,7 +259,6 @@
             transition: 0.4s var(--ease-elastic);
         }
         .fab:hover { transform: scale(1.1) rotate(90deg); }
-
         .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .cal-nav-btn { background: var(--glass-surface); border: 1px solid var(--glass-border); color: var(--text-main); width: 40px; height: 40px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; }
         .cal-nav-btn:hover { background: var(--primary); color: white; box-shadow: var(--shadow-glow); }
@@ -304,12 +284,10 @@
         }
         .task-dot.done { text-decoration: line-through; opacity: 0.5; border-color: var(--success); }
         .task-dot.urgent { border-color: var(--danger); background: rgba(255, 75, 75, 0.1); }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-
         /* --- MOBILE ENHANCEMENTS --- */
         @media (max-width: 768px) {
             #app-root { grid-template-columns: 1fr; grid-template-rows: 1fr 70px; }
@@ -322,13 +300,11 @@
             .nav-item { margin-bottom: 0; width: auto; flex: 1; height: 100%; border-radius: 0; background: transparent !important; box-shadow: none !important; padding: 0 !important; }
             .nav-item.active { color: var(--primary); }
             .nav-item svg { width: 28px; height: 28px; } 
-
             main { order: 1; height: calc(100vh - 70px); padding-bottom: 0; }
             header { padding: 1rem 1.5rem; }
             
             .view-container { padding: 0 1rem 1rem; top: 70px; overflow-x: hidden; }
             .fab { bottom: 90px; right: 20px; width: 56px; height: 56px; }
-
             .bento-grid { grid-template-columns: 1fr; gap: 1rem; padding-bottom: 80px; }
             
             .stats-widget { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
@@ -362,7 +338,6 @@
     </style>
 </head>
 <body onload="QuantumApp.init()">
-
     <div id="login-screen" style="position:fixed; inset:0; z-index:9999; background:var(--bg-deep); display:flex; flex-direction:column; justify-content:center; align-items:center;">
         <div class="glass-panel" style="padding:3rem; border-radius:30px; width:90%; max-width:400px; text-align:center;">
             <h1 class="brand-logo" style="margin-bottom:0.5rem; font-size:2.5rem; display:block;">Basel</h1>
@@ -372,7 +347,6 @@
             <button class="btn-main" onclick="QuantumApp.login()">AUTHENTICATE</button>
         </div>
     </div>
-
     <div id="app-root" class="hidden">
         <aside class="glass-panel" style="border-radius:0;">
             <div style="display:flex; flex-direction:column; align-items:center; width:100%; margin-bottom:1rem;">
@@ -425,7 +399,6 @@
                 <span class="nav-text">Logout</span>
             </div>
         </aside>
-
         <main>
             <header>
                 <div>
@@ -440,7 +413,6 @@
                     <div class="avatar">B</div>
                 </div>
             </header>
-
             <div id="view-home" class="view-container active">
                 <div class="bento-grid">
                     <div class="stats-widget glass-panel spotlight-card">
@@ -456,7 +428,6 @@
                     <div id="folders-mount" style="display:contents;"></div>
                 </div>
             </div>
-
             <div id="view-tasks" class="view-container">
                 <div class="task-view-header">
                     <button class="interactive" onclick="Router.nav('home')" style="background:none; border:none; color:var(--text-main); font-size:1.5rem; cursor:pointer;">←</button>
@@ -480,7 +451,6 @@
                     </div>
                 </div>
             </div>
-
             <div id="view-calendar" class="view-container">
                 <div class="cal-header">
                     <h1 id="cal-title" style="background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Timeline</h1>
@@ -496,9 +466,7 @@
             </div>
         </main>
     </div>
-
     <div class="fab interactive hidden" id="main-fab" onclick="Modal.open()">+</div>
-
     <div class="modal-backdrop" id="modal-overlay" onclick="if(event.target === this) Modal.close()">
         <div class="modal-window glass-panel">
             <h2 style="margin-bottom:1.5rem;">New Objective</h2>
@@ -521,28 +489,106 @@
             <button class="btn-main" onclick="Tasks.save()">INITIATE MISSION</button>
         </div>
     </div>
-
     <div id="toast-container"></div>
     <div id="excel-controls" style="display:none;">
         <input type="file" id="excel-import-file" accept=".csv, .xlsx, .xls" onchange="QuantumExcel.import(event)" style="display:none;">
     </div>
     <canvas id="confetti" style="position:fixed; inset:0; pointer-events:none; z-index:2000;"></canvas>
-
 <script>
-    const CONFIG = { user: 'Basel', pass: '2505', dbKey: 'Basel_quantum_v1' };
-
-    const DB = {
-        get: () => JSON.parse(localStorage.getItem(CONFIG.dbKey)) || { tasks: [] },
-        set: (data) => localStorage.setItem(CONFIG.dbKey, JSON.stringify(data)),
-        init: () => { if(!localStorage.getItem(CONFIG.dbKey)) DB.set({ tasks: [] }); }
+    // ==========================================
+    // 1. GITHUB CLOUD CONFIGURATION
+    // ==========================================
+    const CONFIG = { 
+        user: 'Basel', 
+        pass: '2505', 
+        
+        // --- ⚠️ PASTE YOUR TOKEN BELOW (KEEP THE QUOTES) ---
+        ghToken: 'PASTE_YOUR_GITHUB_TOKEN_HERE',
+        // ----------------------------------------------------
+        
+        gistId: '7bd3e6d0a8d8b54d2ee12fa37b9cfe81',
+        fileName: 'basel_data.json' // Assuming you named the file in Gist this way
     };
 
+    // ==========================================
+    // 2. CLOUD SYNC ENGINE
+    // ==========================================
+    const DB = {
+        // Read local cache for speed
+        get: () => JSON.parse(localStorage.getItem('Basel_Cache_V2')) || { tasks: [] },
+        
+        // Update local cache
+        setLocal: (data) => localStorage.setItem('Basel_Cache_V2', JSON.stringify(data)),
+
+        // PULL: Get latest data from GitHub
+        pull: async () => {
+            try {
+                NotificationSys.show('Syncing with Cloud...', 'info');
+                const response = await fetch(`https://api.github.com/gists/${CONFIG.gistId}`, {
+                    headers: { 
+                        'Authorization': `token ${CONFIG.ghToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if(!response.ok) throw new Error('Auth Error');
+                
+                const json = await response.json();
+                const content = json.files[CONFIG.fileName].content;
+                const tasksData = JSON.parse(content);
+                
+                DB.setLocal(tasksData); // Update local storage
+                NotificationSys.show('System Updated from Cloud', 'success');
+                
+                // Refresh active views
+                if(document.getElementById('view-home').classList.contains('active')) Tasks.renderFolders();
+                if(document.getElementById('view-tasks').classList.contains('active')) Tasks.renderList();
+                if(document.getElementById('view-myday')?.classList.contains('active')) MyDayController.render();
+                Tasks.updateGlobalStats();
+                return tasksData;
+            } catch (e) {
+                console.error(e);
+                NotificationSys.show('Offline Mode Active', 'error');
+            }
+        },
+
+        // PUSH: Save data to GitHub
+        push: async () => {
+            const currentData = DB.get();
+            try {
+                await fetch(`https://api.github.com/gists/${CONFIG.gistId}`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Authorization': `token ${CONFIG.ghToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        files: {
+                            [CONFIG.fileName]: { content: JSON.stringify(currentData) }
+                        }
+                    })
+                });
+                NotificationSys.show('Data Secured on Cloud', 'success');
+            } catch (e) {
+                console.error(e);
+                NotificationSys.show('Cloud Save Failed', 'error');
+            }
+        },
+        
+        // MAIN SET FUNCTION: Updates local AND pushes to cloud
+        set: (data) => {
+            DB.setLocal(data);
+            DB.push(); 
+        },
+
+        init: () => { 
+            if(!localStorage.getItem('Basel_Cache_V2')) DB.setLocal({ tasks: [] });
+        }
+    };
     // --- CALENDAR SYNC LOGIC ---
     const CalendarSync = {
         execute: () => {
             const tasks = DB.get().tasks.filter(t => !t.completed);
             if(tasks.length === 0) return NotificationSys.show('No active tasks to sync', 'info');
-
             let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Basel Productivity//Quantum Edition//EN\n";
             
             tasks.forEach(task => {
@@ -561,7 +607,6 @@
             });
             
             icsContent += "END:VCALENDAR";
-
             const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -573,10 +618,9 @@
             NotificationSys.show('Calendar File Generated', 'success');
         }
     };
-
     const DataSync = {
         export: () => {
-            const data = localStorage.getItem(CONFIG.dbKey);
+            const data = localStorage.getItem('Basel_Cache_V2');
             if (!data || JSON.parse(data).tasks.length === 0) {
                 return NotificationSys.show('No data to export, Commander.', 'error');
             }
@@ -610,7 +654,6 @@
             reader.readAsText(file);
         }
     };
-
     const FX = {
         confetti: () => {
             const canvas = document.getElementById('confetti');
@@ -633,7 +676,6 @@
             });
         }
     };
-
     const NotificationSys = {
         show: (msg, type='info') => {
             const con = document.getElementById('toast-container');
@@ -644,12 +686,14 @@
             setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; setTimeout(() => el.remove(), 500); }, 3000);
         }
     };
-
     const QuantumApp = {
         state: { folder: null, editingId: null, showCompleted: true, showCompletedMyDay: true }, 
         init: () => {
             DB.init();
-            if(sessionStorage.getItem('Basel_session')) QuantumApp.unlockUI();
+            if(sessionStorage.getItem('Basel_session')) {
+                QuantumApp.unlockUI();
+                DB.pull(); // Auto-Sync on load
+            }
             document.addEventListener('mousemove', FX.trackMouse);
             document.addEventListener('keydown', (e) => {
                 if(e.ctrlKey && e.key === 'k') { e.preventDefault(); document.getElementById('task-search')?.focus(); }
@@ -667,6 +711,7 @@
             if(u === CONFIG.user && p === CONFIG.pass) { 
                 sessionStorage.setItem('Basel_session', u); 
                 QuantumApp.unlockUI(); 
+                DB.pull(); // Sync on login
                 NotificationSys.show('Access Granted.', 'success'); 
             } 
             else { 
@@ -680,7 +725,7 @@
             Router.nav('home');
         },
         resetData: () => {
-            if(confirm('⚠️ Factory Reset? All data will be lost.')) { localStorage.removeItem(CONFIG.dbKey); location.reload(); }
+            if(confirm('⚠️ Factory Reset? All data will be lost.')) { localStorage.removeItem('Basel_Cache_V2'); location.reload(); }
         },
         logout: () => { sessionStorage.removeItem('Basel_session'); location.reload(); },
         toggleTheme: () => { const current = document.body.getAttribute('data-theme'); document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light'); },
@@ -701,7 +746,6 @@
             Tasks.renderList(document.getElementById('task-search').value);
         }
     };
-
     const Router = {
         nav: (view) => {
             document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
@@ -728,7 +772,6 @@
             Tasks.renderList();
         }
     };
-
     const Tasks = {
         folders: ['X Academy', 'Personal', 'Work', 'Development'],
          getFormattedDate: (dateStr) => {
@@ -772,14 +815,12 @@
             listToday.innerHTML = ''; listLong.innerHTML = '';
             
             const showDone = QuantumApp.state.showCompleted; 
-
             const data = DB.get().tasks.filter(t => t.folder === f);
             if(data.length === 0) { listToday.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--text-muted); opacity:0.5;">Empty Sector.</div>`; return; }
             data.forEach((t, i) => {
                 if(filterText && !t.title.toLowerCase().includes(filterText.toLowerCase())) return;
                 
                 if (!showDone && t.completed) return;
-
                 const el = document.createElement('div');
                 el.className = `task-item ${t.completed ? 'completed' : ''} interactive`;
                 el.style.animationDelay = `${i * 0.05}s`;
@@ -840,7 +881,6 @@
         },
         search: (val) => Tasks.renderList(val)
     };
-
     const Calendar = {
         date: new Date(),
         nav: (delta) => {
@@ -868,7 +908,6 @@
             }
         }
     };
-
     const Modal = {
         open: () => {
             QuantumApp.state.editingId = null;
@@ -897,7 +936,6 @@
             if(QuantumApp.state.folder) sel.value = QuantumApp.state.folder;
         }
     };
-
     /**
      * ==========================================
      * QUANTUM EXTENSIONS (Merged Logic)
@@ -920,7 +958,6 @@
             
             // Insert at index 3 (After Calendar)
             navContainer.insertBefore(myDayBtn, navContainer.children[3]);
-
             // Inject Excel Controls with text spans
             const excelExportBtn = document.createElement('div');
             excelExportBtn.className = 'nav-item';
@@ -941,11 +978,9 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
                 <span class="nav-text">Import</span>
             `;
-
             const jsonBackupBtn = document.querySelector('div[onclick="DataSync.export()"]');
             navContainer.insertBefore(excelExportBtn, jsonBackupBtn);
             navContainer.insertBefore(excelImportBtn, jsonBackupBtn);
-
             // Inject My Day View
             const main = document.querySelector('main');
             const myDayView = document.createElement('div');
@@ -965,7 +1000,6 @@
                 <div id="myday-list-mount" style="padding-bottom:100px;"></div>
             `;
             main.appendChild(myDayView);
-
             // Override Router
             const originalNav = Router.nav;
             Router.nav = (view) => {
@@ -983,7 +1017,6 @@
             Calendar.render = ExtendedCalendar.render;
         }
     };
-
     const QuantumExcel = {
         export: () => {
             const tasks = DB.get().tasks;
@@ -1038,7 +1071,6 @@
             reader.readAsText(file);
         }
     };
-
     const MyDayController = {
         toggleShowCompleted: (val) => {
             QuantumApp.state.showCompletedMyDay = val;
@@ -1055,13 +1087,11 @@
             if (!QuantumApp.state.showCompletedMyDay) {
                 tasks = tasks.filter(t => !t.completed);
             }
-
             tasks.sort((a, b) => {
                 const dateA = new Date(a.dueDate + (a.time ? 'T' + a.time : 'T00:00'));
                 const dateB = new Date(b.dueDate + (b.time ? 'T' + b.time : 'T00:00'));
                 return dateA - dateB;
             });
-
             if (tasks.length === 0) {
                 mount.innerHTML = `<div style="text-align:center; padding:4rem; color:var(--text-muted); opacity:0.6;">You are completely free, Sir.</div>`;
                 return;
@@ -1090,7 +1120,6 @@
             });
         }
     };
-
     const ExtendedCalendar = {
         render: () => {
             const grid = document.getElementById('cal-grid-mount'); if(!grid) return;
@@ -1128,7 +1157,6 @@
             }, 50);
         }
     };
-
     QuantumExtensions.init();
 </script>
 </body>
